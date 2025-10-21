@@ -170,3 +170,6 @@ echo    compilar sin errores ahora.
 echo.
 pause
 
+
+
+

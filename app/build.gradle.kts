@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
     // id("com.google.dagger.hilt.android")
-    // id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -71,6 +71,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    
     // MultiDex para compatibilidad con POCO X7 Pro
     implementation("androidx.multidex:multidex:2.0.1")
     
@@ -118,6 +122,14 @@ dependencies {
     // Permissions & UI
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    
+    // Lifecycle Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     
     // Testing
     testImplementation("junit:junit:4.13.2")

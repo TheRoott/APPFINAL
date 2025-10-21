@@ -108,3 +108,6 @@ El archivo `gradle-wrapper.properties` ha sido **CORREGIDO COMPLETAMENTE** y deb
 
 **🌱 ¡Listo para ejecutar EcoVive Perú! 🌍**
 
+
+
+

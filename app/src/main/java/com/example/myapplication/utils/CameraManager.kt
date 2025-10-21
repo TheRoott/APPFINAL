@@ -24,7 +24,7 @@ class CameraManager(private val context: Context) {
                 if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
                     val externalDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                     if (externalDir != null) {
-                        File(externalDir, "EcoVive")
+                        File(externalDir, "ReciclaContigo")
                     } else {
                         Log.w("CameraManager", "ExternalFilesDir es null, usando directorio interno")
                         File(context.filesDir, "images")
@@ -68,7 +68,7 @@ class CameraManager(private val context: Context) {
                 Log.w("CameraManager", "Error creando timestamp: ${e.message}")
                 System.currentTimeMillis().toString()
             }
-            val imageFileName = "EcoVive_${timeStamp}"
+            val imageFileName = "ReciclaContigo_${timeStamp}"
             
             Log.d("CameraManager", "Creando archivo: $imageFileName.jpg")
             

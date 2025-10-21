@@ -222,3 +222,6 @@ enum class ReportCategory(
 
 **🎉 ¡Todas las mejoras solicitadas han sido implementadas exitosamente!**
 
+
+
+

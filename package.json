@@ -1,0 +1,15 @@
+{
+  "name": "ecovive-backend",
+  "version": "1.0.0",
+  "description": "Backend for EcoVive Perú",
+  "scripts": {
+    "build": "echo 'Using Dockerfile instead'",
+    "start": "echo 'Using Dockerfile instead'"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
+
+

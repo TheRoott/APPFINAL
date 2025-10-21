@@ -125,3 +125,6 @@ Build → Rebuild Project
 
 **🎯 La aplicación está lista para compilar y ejecutar en tu POCO X7 Pro**
 
+
+
+

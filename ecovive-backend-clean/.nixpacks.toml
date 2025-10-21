@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ["jdk17", "maven"]
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests"]
+
+[phases.start]
+cmd = "java -jar target/ecovive-backend-1.0.0.jar"
+
+[providers]
+java = "17"
+
+
+

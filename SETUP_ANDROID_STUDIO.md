@@ -152,3 +152,6 @@ Antes de ejecutar, verifica:
 
 Si encuentras algún problema específico, revisa los logs de Android Studio o contacta para obtener ayuda adicional.
 
+
+
+

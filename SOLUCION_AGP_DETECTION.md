@@ -142,3 +142,6 @@ El error "Unable to determine project Android Gradle Plugin (AGP) version" ha si
 
 **🌱 ¡Listo para ejecutar EcoVive Perú sin errores! 🌍**
 
+
+
+

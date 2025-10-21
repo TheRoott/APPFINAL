@@ -176,3 +176,6 @@ Kotlin: 1.9.22
 
 **¡Sync Project y Build ahora deberían funcionar correctamente!**
 
+
+
+

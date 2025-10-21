@@ -23,14 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 // import com.example.myapplication.BuildConfig // Temporalmente comentado
 import com.example.myapplication.data.*
+import com.example.myapplication.data.MockReportsData
+import com.example.myapplication.data.database.ReportRepository
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.map
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen() {
+    val context = LocalContext.current
+    val reportRepository = remember { ReportRepository(context) }
+    
     var selectedFilter by remember { mutableStateOf(ReportCategory.TRASH) }
     var showFilters by remember { mutableStateOf(false) }
 
@@ -40,34 +50,32 @@ fun MapScreen() {
         position = CameraPosition.fromLatLngZoom(ventanillaLocation, 13f)
     }
 
-    // Reportes de ejemplo con ubicaciones reales en Ventanilla
-    val reports = remember {
-        listOf(
-            EnvironmentalReport(
-                category = ReportCategory.TRASH,
-                title = "Basura en el malecón",
-                description = "Acumulación de residuos en el paseo marítimo",
-                location = com.example.myapplication.utils.LocationData(-11.8650, -77.1094, "Malecón de Ventanilla"),
-                status = ReportStatus.PENDING,
-                ecoPoints = 10
-            ),
-            EnvironmentalReport(
-                category = ReportCategory.POLLUTION,
-                title = "Humo industrial",
-                description = "Emisiones contaminantes de fábrica cercana",
-                location = com.example.myapplication.utils.LocationData(-11.8700, -77.1050, "Zona Industrial Ventanilla"),
-                status = ReportStatus.IN_PROGRESS,
-                ecoPoints = 15
-            ),
-            EnvironmentalReport(
-                category = ReportCategory.WATER_POLLUTION,
-                title = "Contaminación en playa",
-                description = "Aguas contaminadas en playa de Ventanilla",
-                location = com.example.myapplication.utils.LocationData(-11.8600, -77.1100, "Playa Ventanilla"),
-                status = ReportStatus.RESOLVED,
-                ecoPoints = 25
-            )
-        )
+    // Obtener reportes de la base de datos y combinar con los mock
+    val savedReports by reportRepository.getAllReports().collectAsStateWithLifecycle(initialValue = emptyList())
+    
+    // SIEMPRE combinar reportes guardados + 100 reportes aleatorios mock
+    val allReports = remember(savedReports) {
+        val combinedReports = mutableListOf<EnvironmentalReport>()
+        
+        // Primero agregar los 100 reportes mock aleatorios de Ventanilla
+        combinedReports.addAll(MockReportsData.allReports)
+        
+        // Luego agregar los reportes guardados por el usuario
+        combinedReports.addAll(savedReports)
+        
+        // Ordenar por timestamp descendente (más nuevos primero)
+        combinedReports.sortByDescending { it.timestamp }
+        
+        android.util.Log.d("MapScreen", "Total reportes: ${combinedReports.size} (${MockReportsData.allReports.size} mock + ${savedReports.size} guardados)")
+        
+        combinedReports
+    }
+    
+    // Filtrar reportes por categoría
+    val reports = remember(allReports, selectedFilter) {
+        val filtered = allReports.filter { it.category == selectedFilter }
+        android.util.Log.d("MapScreen", "Reportes filtrados por ${selectedFilter.title}: ${filtered.size}")
+        filtered
     }
 
     Column(
@@ -103,6 +111,18 @@ fun MapScreen() {
                         Text(
                             text = "Ventanilla, Callao",
                             style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "${reports.size} reportes de ${selectedFilter.title}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Total: ${allReports.size} reportes en el mapa",
+                            style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -325,16 +345,45 @@ fun MapScreen() {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text(
-                    text = "📍 Reportes de ${selectedFilter.title}",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                val filteredReports = reports.filter { it.category == selectedFilter }.take(20)
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "📍 Reportes de ${selectedFilter.title}",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "${filteredReports.size} reportes recientes de ${reports.count { it.category == selectedFilter }} totales",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = "🆕 Más recientes primero",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
                     
                     Spacer(modifier = Modifier.height(8.dp))
                     
-                    reports.forEach { report ->
+                    filteredReports.forEach { report ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -369,16 +418,32 @@ fun MapScreen() {
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    Text(
-                                        text = "Estado: ${report.status.title}",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = when (report.status) {
-                                            ReportStatus.PENDING -> Color(0xFFFF9800)
-                                            ReportStatus.IN_PROGRESS -> Color(0xFF2196F3)
-                                            ReportStatus.RESOLVED -> Color(0xFF4CAF50)
-                                            ReportStatus.VERIFIED -> Color(0xFF9C27B0)
-                                        }
-                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Estado: ${report.status.title}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = when (report.status) {
+                                                ReportStatus.PENDING -> Color(0xFFFF9800)
+                                                ReportStatus.IN_PROGRESS -> Color(0xFF2196F3)
+                                                ReportStatus.RESOLVED -> Color(0xFF4CAF50)
+                                                ReportStatus.VERIFIED -> Color(0xFF9C27B0)
+                                            }
+                                        )
+                                        Text(
+                                            text = "•",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault()).format(Date(report.timestamp)),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
                                 }
                                 Text(
                                     text = "${report.ecoPoints} pts",
@@ -390,9 +455,9 @@ fun MapScreen() {
                         }
                     }
                 }
-            }
         }
     }
+}
 
 @Composable
 fun ReportItemCard(report: EnvironmentalReport) {

@@ -33,7 +33,9 @@ sealed class BottomNavItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    onLogout: () -> Unit = {}
+) {
     android.util.Log.d("MainScreen", "=== INICIANDO MAINScreen ===")
     
     var selectedTab by remember { mutableStateOf(0) }
@@ -105,7 +107,7 @@ fun MainScreen() {
                 }
                 4 -> {
                     android.util.Log.d("MainScreen", "Cargando ProfileScreen...")
-                    ProfileScreen()
+                    ProfileScreen(onLogout = onLogout)
                 }
             }
             android.util.Log.d("MainScreen", "Pantalla renderizada exitosamente")

@@ -134,3 +134,6 @@ El plugin de Compose problemático ha sido **REMOVIDO COMPLETAMENTE** y la aplic
 
 **🌱 ¡Listo para ejecutar sin errores! 🌍**
 
+
+
+

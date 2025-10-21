@@ -256,3 +256,6 @@ Text(text = category.icon, fontSize = 16.sp)
 
 **¡Build Project y Rebuild Project ahora deberían funcionar correctamente!**
 
+
+
+

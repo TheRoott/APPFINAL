@@ -132,3 +132,6 @@ echo    deberia resolver el error de deteccion.
 echo.
 pause
 
+
+
+

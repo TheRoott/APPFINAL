@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Fondo circular verde -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M54,54m-54,0a54,54 0,1 1,108 0a54,54 0,1 1,-108 0" />
+    
+    <!-- Hoja principal -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 C45,20 38,27 38,36 L38,72 C38,81 45,88 54,88 C63,88 70,81 70,72 L70,36 C70,27 63,20 54,20 Z
+                         M54,24 C61,24 66,29 66,36 L66,72 C66,79 61,84 54,84 C47,84 42,79 42,72 L42,36 C42,29 47,24 54,24 Z" />
+    
+    <!-- Vena central de la hoja -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M54,28 L54,76 M50,32 L50,72 M58,32 L58,72" />
+    
+    <!-- Símbolo de reciclaje como círculos -->
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M48,42m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M60,52m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M45,62m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    
+    <!-- Texto "Recicla Contigo" -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M30,95 L78,95 L78,100 L30,100 Z" />
+</vector>
+
+

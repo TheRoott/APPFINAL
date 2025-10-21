@@ -2,6 +2,9 @@ package com.example.myapplication.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class UserData(
     val name: String,
@@ -15,7 +18,10 @@ data class UserData(
 )
 
 class UserSessionManager(private val context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("ecovive_session", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = context.getSharedPreferences("recicla_contigo_session", Context.MODE_PRIVATE)
+    
+    private val _userData = MutableStateFlow(getUserSession())
+    val userData: StateFlow<UserData> = _userData.asStateFlow()
     
     fun saveUserSession(userData: UserData) {
         prefs.edit().apply {
@@ -29,12 +35,13 @@ class UserSessionManager(private val context: Context) {
             putBoolean("user_is_logged_in", userData.isLoggedIn)
             apply()
         }
+        _userData.value = userData
     }
     
     fun getUserSession(): UserData {
         return UserData(
             name = prefs.getString("user_name", "EcoGuardián") ?: "EcoGuardián",
-            email = prefs.getString("user_email", "usuario@ecovive.com") ?: "usuario@ecovive.com",
+            email = prefs.getString("user_email", "usuario@reciclacontigo.com") ?: "usuario@reciclacontigo.com",
             location = prefs.getString("user_location", "Ventanilla, Callao") ?: "Ventanilla, Callao",
             ecoPoints = prefs.getInt("user_eco_points", 1250),
             level = prefs.getString("user_level", "Guardián 🌎") ?: "Guardián 🌎",
@@ -47,27 +54,33 @@ class UserSessionManager(private val context: Context) {
     fun updateEcoPoints(points: Int) {
         val currentPoints = prefs.getInt("user_eco_points", 1250)
         prefs.edit().putInt("user_eco_points", currentPoints + points).apply()
+        _userData.value = getUserSession()
     }
     
     fun updateReportsCount() {
         val currentCount = prefs.getInt("user_reports_count", 15)
         prefs.edit().putInt("user_reports_count", currentCount + 1).apply()
+        _userData.value = getUserSession()
     }
     
     fun updateLevel(newLevel: String) {
         prefs.edit().putString("user_level", newLevel).apply()
+        _userData.value = getUserSession()
     }
     
     fun updateName(newName: String) {
         prefs.edit().putString("user_name", newName).apply()
+        _userData.value = getUserSession()
     }
     
     fun updateLocation(newLocation: String) {
         prefs.edit().putString("user_location", newLocation).apply()
+        _userData.value = getUserSession()
     }
     
     fun logout() {
         prefs.edit().putBoolean("user_is_logged_in", false).apply()
+        _userData.value = getUserSession()
     }
     
     fun isUserLoggedIn(): Boolean {

@@ -1,0 +1,18 @@
+# Ignore everything except backend directory
+app/
+gradle/
+build/
+*.gradle
+*.gradle.kts
+gradlew
+gradlew.bat
+local.properties
+settings.gradle.kts
+
+# Ignore documentation and scripts
+*.md
+*.bat
+*.sh
+
+# Only keep backend directory
+!backend/

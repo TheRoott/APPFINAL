@@ -2,7 +2,7 @@ package com.example.myapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Paleta de colores EcoVive Perú - Verde y Azul Profesional
+// Paleta de colores Recicla Contigo - Verde y Azul Profesional
 
 // Colores principales - Verde Ecológico
 val EcoGreenPrimary = Color(0xFF2E7D32)        // Verde profundo

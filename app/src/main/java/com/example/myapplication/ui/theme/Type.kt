@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Tipografía profesional para EcoVive Perú
+// Tipografía profesional para Recicla Contigo
 // Usando fuentes del sistema con pesos específicos para una apariencia moderna
 val EcoViveTypography = Typography(
     // Títulos principales

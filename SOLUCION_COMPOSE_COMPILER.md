@@ -139,3 +139,6 @@ El error de compatibilidad del Compose Compiler ha sido **ELIMINADO** y todas la
 
 **🌱 ¡Listo para ejecutar EcoVive Perú sin errores! 🌍**
 
+
+
+

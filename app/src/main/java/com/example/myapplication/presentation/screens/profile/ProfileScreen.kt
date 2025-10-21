@@ -25,7 +25,9 @@ import com.example.myapplication.presentation.components.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onLogout: () -> Unit = {}
+) {
     val context = LocalContext.current
     val sessionManager = remember { UserSessionManager(context) }
     val appSettings = remember { AppSettings(context) }
@@ -35,6 +37,7 @@ fun ProfileScreen() {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLocationPermissionDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     // Actualizar datos del usuario al iniciar
     LaunchedEffect(Unit) {
@@ -230,7 +233,10 @@ fun ProfileScreen() {
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                getHelpSupportOptionsData(showHelpDialog = { showHelpDialog = true }).forEach { option ->
+                getHelpSupportOptionsData(
+                    showHelpDialog = { showHelpDialog = true },
+                    onLogout = { showLogoutDialog = true }
+                ).forEach { option ->
                     ProfileOptionItem(option = option)
                 }
             }
@@ -254,7 +260,7 @@ fun ProfileScreen() {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "EcoVive Perú",
+                    text = "Recicla Contigo",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -266,7 +272,7 @@ fun ProfileScreen() {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Conectando personas con el planeta",
+                    text = "Juntos por un mundo más limpio",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -324,6 +330,52 @@ fun ProfileScreen() {
     if (showHelpDialog) {
         HelpSupportDialog(
             onDismiss = { showHelpDialog = false }
+        )
+    }
+    
+    // Dialog de confirmación de cierre de sesión
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Cerrar Sesión",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            text = {
+                Text("¿Estás seguro que deseas cerrar sesión?\n\nDeberás iniciar sesión nuevamente para acceder a la aplicación.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        // Cerrar sesión
+                        sessionManager.logout()
+                        showLogoutDialog = false
+                        onLogout()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Cerrar Sesión")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
         )
     }
 }
@@ -589,7 +641,7 @@ fun HelpSupportDialog(onDismiss: () -> Unit) {
                     }
                 }
 
-                // Información de contacto
+                // Información del desarrollador
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer
@@ -599,24 +651,36 @@ fun HelpSupportDialog(onDismiss: () -> Unit) {
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "📞 Contacto",
+                            text = "👨‍💻 Desarrollador",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Email: soporte@ecoviveperu.com",
+                            text = "Fernando Sebastian Rufasto Taipe",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "📧 Email: rufasst@gmail.com",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
-                            text = "Teléfono: +51 987 654 321",
+                            text = "📱 WhatsApp: +55 41 997207040",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
-                            text = "Ubicación: Ventanilla, Callao, Perú",
+                            text = "📱 Teléfono: +51 980944281",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                        Text(
+                            text = "💬 Telegram: t.me/RufasTT",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
@@ -640,7 +704,7 @@ fun HelpSupportDialog(onDismiss: () -> Unit) {
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "EcoVive Perú v1.0.0",
+                            text = "Recicla Contigo v1.0.0",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -651,7 +715,7 @@ fun HelpSupportDialog(onDismiss: () -> Unit) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "© 2024 EcoVive Perú. Todos los derechos reservados.",
+                            text = "© 2024 Recicla Contigo. Todos los derechos reservados.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -694,9 +758,9 @@ fun getProfileOptionsData(
     ProfileOption(Icons.Default.LocationOn, "Ubicación", "Activar ubicación para reportes", onClick = onLocationSettings)
 )
 
-fun getHelpSupportOptionsData(showHelpDialog: () -> Unit): List<ProfileOption> = listOf(
+fun getHelpSupportOptionsData(showHelpDialog: () -> Unit, onLogout: () -> Unit): List<ProfileOption> = listOf(
     ProfileOption(Icons.Default.Help, "Ayuda", "Preguntas frecuentes", onClick = showHelpDialog),
     ProfileOption(Icons.Default.Info, "Acerca de", "Información de la aplicación", onClick = showHelpDialog),
     ProfileOption(Icons.Default.ContactSupport, "Contactar Soporte", "Reportar problemas o sugerencias", onClick = showHelpDialog),
-    ProfileOption(Icons.Default.ExitToApp, "Cerrar Sesión", "Salir de la aplicación")
+    ProfileOption(Icons.Default.ExitToApp, "Cerrar Sesión", "Salir de la aplicación", onClick = onLogout)
 )

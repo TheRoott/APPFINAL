@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,11 +40,22 @@ import com.example.myapplication.utils.CameraManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.io.File
+import com.example.myapplication.data.database.ReportRepository
+import com.example.myapplication.data.EnvironmentalReport
+import com.example.myapplication.data.ReportCategory as ReportCategoryData
+import com.example.myapplication.data.ReportStatus
+import com.example.myapplication.utils.LocationData
+import com.example.myapplication.data.UserSessionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportScreen() {
     val context = LocalContext.current
+    
+    // Repositorio y sesión
+    val reportRepository = remember { ReportRepository(context) }
+    val sessionManager = remember { UserSessionManager(context) }
+    val userData by sessionManager.userData.collectAsStateWithLifecycle()
     
     // Estados
     var title by remember { mutableStateOf("") }
@@ -55,6 +67,7 @@ fun ReportScreen() {
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showLocationPermissionDialog by remember { mutableStateOf(false) }
     var locationEnabled by remember { mutableStateOf(false) }
+    var earnedPoints by remember { mutableStateOf(0) }
     
     // Camera manager
     val cameraManager = remember { CameraManager(context) }
@@ -282,16 +295,6 @@ fun ReportScreen() {
         }
     }
     
-    // Limpiar formulario
-    LaunchedEffect(showSuccessDialog) {
-        if (showSuccessDialog) {
-            kotlinx.coroutines.delay(2000)
-            showSuccessDialog = false
-            title = ""
-            description = ""
-            photoUri = null
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -484,31 +487,87 @@ fun ReportScreen() {
                 android.util.Log.d("ReportButton", "Botón de envío presionado")
                 android.util.Log.d("ReportButton", "Título: '$title'")
                 android.util.Log.d("ReportButton", "Descripción: '$description'")
-                android.util.Log.d("ReportButton", "IsSubmitting: $isSubmitting")
-                android.util.Log.d("ReportButton", "LocationEnabled: $locationEnabled")
+                android.util.Log.d("ReportButton", "Categoría: ${selectedCategory?.name}")
+                android.util.Log.d("ReportButton", "Foto: $photoUri")
                 
-                // Enviar directamente sin verificaciones adicionales
-                if (title.isNotBlank() && description.isNotBlank()) {
-                    android.util.Log.d("ReportButton", "Iniciando envío directo...")
+                // Validar campos requeridos
+                if (title.isNotBlank() && description.isNotBlank() && selectedCategory != null) {
+                    android.util.Log.d("ReportButton", "Iniciando guardado de reporte...")
                     isSubmitting = true
                     
                     coroutineScope.launch {
                         try {
-                            kotlinx.coroutines.delay(2000)
-                            isSubmitting = false
-                            showSuccessDialog = true
-                            android.util.Log.d("ReportButton", "Reporte enviado exitosamente")
+                            // Mapear la categoría del UI al modelo de datos
+                            val categoryData = when(selectedCategory!!.name) {
+                                "Basura" -> ReportCategoryData.TRASH
+                                "Tala de Árboles" -> ReportCategoryData.DEFORESTATION
+                                "Contaminación del Agua" -> ReportCategoryData.WATER_POLLUTION
+                                "Contaminación del Suelo" -> ReportCategoryData.POLLUTION
+                                "Contaminación Sonora" -> ReportCategoryData.AIR_POLLUTION
+                                else -> ReportCategoryData.OTHER
+                            }
+                            
+                            // Obtener ubicación actual o usar ubicación por defecto
+                            val location = currentLocation ?: Location("").apply {
+                                latitude = -11.9000
+                                longitude = -77.1000
+                            }
+                            
+                            // Crear el reporte
+                            val report = EnvironmentalReport(
+                                id = System.currentTimeMillis().toString(),
+                                category = categoryData,
+                                title = title,
+                                description = description,
+                                photoPath = photoUri?.toString(),
+                                location = LocationData(
+                                    latitude = location.latitude,
+                                    longitude = location.longitude,
+                                    address = "Ventanilla, Callao, Perú"
+                                ),
+                                timestamp = System.currentTimeMillis(),
+                                status = ReportStatus.PENDING,
+                                userId = userData?.email ?: "usuario@reciclacontigo.com",
+                                ecoPoints = 0 // Se calculará en el repositorio
+                            )
+                            
+                            // Guardar en la base de datos
+                            android.util.Log.d("ReportButton", "Guardando reporte en BD...")
+                            val reportId = reportRepository.saveReport(report)
+                            
+                            if (reportId > 0) {
+                                // Obtener los puntos ganados
+                                val points = reportRepository.getUserTotalPoints(userData?.email ?: "usuario@reciclacontigo.com")
+                                val previousPoints = userData?.ecoPoints ?: 0
+                                earnedPoints = points - previousPoints
+                                
+                                // Actualizar puntos del usuario
+                                if (userData != null) {
+                                    val updatedUser = userData!!.copy(
+                                        ecoPoints = points,
+                                        reportsCount = userData!!.reportsCount + 1
+                                    )
+                                    sessionManager.saveUserSession(updatedUser)
+                                }
+                                
+                                isSubmitting = false
+                                showSuccessDialog = true
+                                android.util.Log.d("ReportButton", "Reporte guardado exitosamente con ID: $reportId, Puntos ganados: $earnedPoints")
+                            } else {
+                                isSubmitting = false
+                                android.util.Log.e("ReportButton", "Error al guardar el reporte")
+                            }
                         } catch (e: Exception) {
-                            android.util.Log.e("ReportButton", "Error: ${e.message}")
+                            android.util.Log.e("ReportButton", "Error: ${e.message}", e)
                             isSubmitting = false
                         }
                     }
                 } else {
-                    android.util.Log.w("ReportButton", "Título o descripción vacíos")
+                    android.util.Log.w("ReportButton", "Faltan campos requeridos")
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !isSubmitting && title.isNotBlank() && description.isNotBlank(),
+            enabled = !isSubmitting && title.isNotBlank() && description.isNotBlank() && selectedCategory != null,
             shape = RoundedCornerShape(12.dp)
         ) {
             if (isSubmitting) {
@@ -534,16 +593,86 @@ fun ReportScreen() {
         AlertDialog(
             onDismissRequest = { showSuccessDialog = false },
             title = {
-                Text(
-                    text = "¡Reporte Enviado!",
-                    fontWeight = FontWeight.Bold
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "✅",
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "¡Reporte Guardado!",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             },
             text = {
-                Text("Tu reporte ha sido enviado exitosamente. Gracias por ayudar a mantener limpio Ventanilla.")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Tu reporte ha sido guardado exitosamente.",
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "🎉 Puntos Ganados",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "+$earnedPoints",
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (selectedCategory?.name == "Basura") {
+                                Text(
+                                    text = "Basura = 20 puntos base",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                            if (photoUri != null) {
+                                Text(
+                                    text = "+ 5 puntos por foto",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Gracias por ayudar a mantener limpio Ventanilla 🌿",
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
             },
             confirmButton = {
-                TextButton(onClick = { showSuccessDialog = false }) {
+                Button(onClick = { 
+                    showSuccessDialog = false
+                    // Limpiar formulario
+                    title = ""
+                    description = ""
+                    photoUri = null
+                    selectedCategory = null
+                    earnedPoints = 0
+                }) {
                     Text("Aceptar")
                 }
             }

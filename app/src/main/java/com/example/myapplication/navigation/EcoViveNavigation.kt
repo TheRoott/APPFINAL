@@ -57,7 +57,14 @@ fun EcoViveNavigation(navController: NavHostController) {
         }
         
         composable(Screen.Main.route) {
-            MainScreen()
+            MainScreen(
+                onLogout = {
+                    // Volver al login y limpiar el back stack
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Main.route) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

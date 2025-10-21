@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -60,9 +62,9 @@ fun Splash(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.primaryContainer
+                        Color(0xFF0F2027), // Azul oscuro profundo
+                        Color(0xFF203A43), // Azul gris oscuro
+                        Color(0xFF2C5364)  // Azul verde oscuro
                     )
                 )
             ),
@@ -72,55 +74,82 @@ fun Splash(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo animado con hoja y planeta
+            // Logo animado con reciclaje
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(200.dp)
                     .scale(scale)
-                    .alpha(alpha)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = CircleShape
-                    ),
+                    .alpha(alpha),
                 contentAlignment = Alignment.Center
             ) {
-                // Icono de hoja (usando emoji por ahora, después se puede reemplazar con un vector)
+                // Círculo con efecto dorado/plateado
+                Box(
+                    modifier = Modifier
+                        .size(160.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    Color(0xFFFFD700), // Dorado
+                                    Color(0xFFFFA500)  // Naranja dorado
+                                )
+                            ),
+                            shape = CircleShape
+                        )
+                )
+                
+                // Icono de reciclaje
                 Text(
-                    text = "🌱",
-                    fontSize = 60.sp,
+                    text = "♻️",
+                    fontSize = 80.sp,
                     modifier = Modifier.alpha(alpha)
                 )
             }
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // Título de la app
+            // Título de la app con efecto dorado
             Text(
-                text = "EcoVive Perú",
+                text = "Recicla Contigo",
                 style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = Color(0xFFFFD700), // Dorado
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.alpha(alpha)
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Subtítulo
+            // Subtítulo elegante
             Text(
-                text = "Conectando personas con el planeta",
+                text = "Juntos por un mundo más limpio",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = Color(0xFFE0E0E0), // Plata claro
                 textAlign = TextAlign.Center,
                 modifier = Modifier.alpha(alpha)
             )
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             
-            // Emoji decorativo
-            Text(
-                text = "🌍",
-                fontSize = 24.sp,
+            // Iconos con efecto luminoso
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.alpha(alpha)
+            ) {
+                Text(text = "🏠", fontSize = 28.sp, modifier = Modifier.alpha(0.9f))
+                Text(text = "🌱", fontSize = 28.sp, modifier = Modifier.alpha(0.9f))
+                Text(text = "👥", fontSize = 28.sp, modifier = Modifier.alpha(0.9f))
+                Text(text = "🌿", fontSize = 28.sp, modifier = Modifier.alpha(0.9f))
+                Text(text = "🏢", fontSize = 28.sp, modifier = Modifier.alpha(0.9f))
+            }
+            
+            Spacer(modifier = Modifier.height(32.dp))
+            
+            // Indicador de carga elegante
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(40.dp)
+                    .alpha(alpha),
+                color = Color(0xFFFFD700),
+                strokeWidth = 3.dp
             )
         }
     }

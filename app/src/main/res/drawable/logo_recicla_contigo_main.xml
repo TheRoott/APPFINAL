@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="400dp"
+    android:viewportWidth="400"
+    android:viewportHeight="400">
+    
+    <!-- Círculo de fondo blanco -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M200,80 A120,120 0 1,1 200,320 A120,120 0 1,1 200,80 Z" />
+    
+    <!-- Flecha verde superior (reciclaje) -->
+    <path
+        android:fillColor="#4CAF50"
+        android:strokeWidth="18"
+        android:strokeColor="#4CAF50"
+        android:strokeLineCap="round"
+        android:pathData="M140,120 A100,100 0 0,1 260,120
+                         L260,110 L280,130 L260,150 L260,140
+                         A90,90 0 0,0 150,130 Z" />
+    
+    <!-- Flecha azul inferior (reciclaje) -->
+    <path
+        android:fillColor="#2196F3"
+        android:strokeWidth="18"
+        android:strokeColor="#2196F3"
+        android:strokeLineCap="round"
+        android:pathData="M260,280 A100,100 0 0,1 140,280
+                         L140,290 L120,270 L140,250 L140,260
+                         A90,90 0 0,0 250,270 Z" />
+    
+    <!-- Hoja central verde oscuro -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M185,180 C185,165 192,155 200,155 C208,155 215,165 215,180
+                         L215,220 C215,235 208,245 200,245 C192,245 185,235 185,220 Z
+                         M200,160 C205,160 210,165 210,175 L210,225 C210,230 205,235 200,235
+                         C195,235 190,230 190,225 L190,175 C190,165 195,160 200,160 Z" />
+    
+    <!-- Hoja izquierda verde medio -->
+    <path
+        android:fillColor="#66BB6A"
+        android:pathData="M170,190 C170,180 175,175 180,175 C185,175 190,180 190,190
+                         L190,210 C190,220 185,225 180,225 C175,225 170,220 170,210 Z" />
+    
+    <!-- Hoja derecha verde claro -->
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M210,190 C210,180 215,175 220,175 C225,175 230,180 230,190
+                         L230,210 C230,220 225,225 220,225 C215,225 210,220 210,210 Z" />
+    
+    <!-- Vena central blanca -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M200,165 L200,230" />
+</vector>
+
+

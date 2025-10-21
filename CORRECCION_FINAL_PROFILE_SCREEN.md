@@ -71,3 +71,6 @@ findstr /n "forEach" "app\src\main\java\com\example\myapplication\presentation\s
 **Archivo:** `app/src/main/java/com/example/myapplication/presentation/screens/profile/ProfileScreen.kt`
 **Líneas afectadas:** 163-169
 
+
+
+

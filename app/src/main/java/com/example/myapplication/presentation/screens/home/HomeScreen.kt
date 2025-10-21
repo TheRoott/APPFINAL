@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.data.UserData
 import com.example.myapplication.data.UserSessionManager
 import com.example.myapplication.presentation.components.EcoTipsFloatingWindow
+import com.example.myapplication.presentation.components.WeatherCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,7 +110,7 @@ fun HomeScreen(
         }
 
         // Pronóstico del tiempo
-        WeatherForecastCard()
+        WeatherCard()
 
         // Acciones rápidas mejoradas
         Text(

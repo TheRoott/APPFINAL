@@ -170,3 +170,6 @@ echo 🚀 LISTO PARA SINCRONIZAR EN ANDROID STUDIO
 echo.
 pause
 
+
+
+

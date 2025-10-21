@@ -120,3 +120,6 @@ El error de `metadata.bin` ha sido **ELIMINADO** y la configuración está **PER
 
 **🌱 ¡Listo para ejecutar EcoVive Perú sin errores! 🌍**
 
+
+
+

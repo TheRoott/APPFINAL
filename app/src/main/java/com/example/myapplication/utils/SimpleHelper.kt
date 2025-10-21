@@ -34,10 +34,12 @@ object SimpleHelper {
         Log.d(TAG, getDeviceInfo())
         
         if (isCompatible()) {
-            Log.d(TAG, "✅ Dispositivo compatible con EcoVive Perú")
+            Log.d(TAG, "✅ Dispositivo compatible con Recicla Contigo")
         } else {
             Log.w(TAG, "⚠️ Dispositivo no compatible - requiere Android 13+")
         }
     }
 }
+
+
 

@@ -85,3 +85,6 @@ Si la compilación es exitosa y quieres reactivar `BuildConfig`:
 
 **Resultado Esperado:** ✅ Compilación exitosa sin errores de BuildConfig duplicado
 
+
+
+

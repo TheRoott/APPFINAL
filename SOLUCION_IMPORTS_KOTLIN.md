@@ -174,3 +174,6 @@ Los errores principales de imports han sido **CORREGIDOS**. Con las dependencias
 
 **🌱 ¡Listo para continuar con EcoVive Perú! 🌍**
 
+
+
+

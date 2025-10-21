@@ -122,3 +122,6 @@ val googleMapsApiKey = "demo_key" // ✅ Hardcodeado temporalmente
 
 **📱 Todas las funcionalidades solicitadas están implementadas y funcionando correctamente.**
 
+
+
+

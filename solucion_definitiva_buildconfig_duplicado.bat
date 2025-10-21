@@ -82,3 +82,6 @@ echo Si el error persiste, ejecutar este script nuevamente
 echo.
 pause
 
+
+
+

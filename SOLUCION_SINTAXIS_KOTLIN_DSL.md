@@ -192,3 +192,6 @@ plugins {
 
 **¡Clean Project y Build ahora deberían funcionar correctamente!**
 
+
+
+

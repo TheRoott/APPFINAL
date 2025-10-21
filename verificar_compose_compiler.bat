@@ -72,3 +72,6 @@ echo El proyecto deberia compilar sin errores ahora
 echo.
 pause
 
+
+
+

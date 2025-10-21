@@ -277,3 +277,6 @@ UI State ← ViewModel ← Use Cases ← Repository ← Data Sources
 
 **Esta arquitectura está diseñada para ser escalable, mantenible y seguir las mejores prácticas de desarrollo Android moderno.**
 
+
+
+
