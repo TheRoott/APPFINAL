@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Desplegar Recicla Contigo Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .step-content {
+            color: #555;
+            line-height: 1.6;
+            margin-left: 55px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px 10px 10px 0;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .code-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .alert {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        .success-box {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #155724;
+            text-align: center;
+        }
+        .emoji {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Desplegar Backend en Render</h1>
+        <p class="subtitle">Sigue estos 3 pasos simples para tener tu backend en la nube ☁️</p>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                Crear cuenta en Render
+            </div>
+            <div class="step-content">
+                <p>Crea una cuenta gratuita en Render usando tu GitHub:</p>
+                <a href="https://dashboard.render.com/register" target="_blank" class="btn">
+                    📝 Crear cuenta en Render
+                </a>
+                <p style="margin-top: 10px;">✅ Usa tu cuenta de GitHub para registrarte (más fácil)</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                Conectar tu repositorio
+            </div>
+            <div class="step-content">
+                <p>Una vez dentro de Render Dashboard:</p>
+                <ol style="margin: 15px 0; padding-left: 20px;">
+                    <li>Haz clic en el botón <strong>"New +"</strong></li>
+                    <li>Selecciona <strong>"Blueprint"</strong></li>
+                    <li>Conecta este repositorio:</li>
+                </ol>
+                <div class="code-box">
+                    https://github.com/TheRoott/APPFINAL
+                </div>
+                <a href="https://dashboard.render.com/select-repo?type=blueprint" target="_blank" class="btn">
+                    🔗 Ir a conectar repositorio
+                </a>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                ¡Desplegar automáticamente!
+            </div>
+            <div class="step-content">
+                <p>Render detectará automáticamente el archivo <code>render.yaml</code> y creará:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>✅ El servicio web (Backend API)</li>
+                    <li>✅ Base de datos PostgreSQL gratuita</li>
+                    <li>✅ Variables de entorno configuradas</li>
+                </ul>
+                <p><strong>Tiempo estimado:</strong> 10-15 minutos para el primer despliegue</p>
+            </div>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ Importante:</strong> El plan gratuito de Render tiene un "cold start" de ~30 segundos en la primera petición después de 15 minutos de inactividad. Es normal y esperado.
+        </div>
+
+        <div class="success-box">
+            <div class="emoji">🎉</div>
+            <h2 style="margin-bottom: 15px;">¡Tu API estará lista!</h2>
+            <p style="margin-bottom: 20px;">Render te dará una URL como:</p>
+            <div class="code-box">
+                https://recicla-contigo-backend.onrender.com
+            </div>
+            <p style="margin-top: 20px;">Usa esa URL en tu app Android (BuildConfig.BASE_URL)</p>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 10px;">
+            <h3 style="margin-bottom: 15px;">🧪 Probar tu API después del despliegue:</h3>
+            <p>Visita esta URL en tu navegador:</p>
+            <div class="code-box">
+                https://TU-URL.onrender.com/actuator/health
+            </div>
+            <p style="margin-top: 10px;">Deberías ver: <code>{"status":"UP"}</code></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://dashboard.render.com" target="_blank" class="btn btn-success" style="font-size: 1.3em; padding: 20px 40px;">
+                🚀 ¡COMENZAR AHORA!
+            </a>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; color: #666;">
+            <p>📚 Documentación completa en: <a href="./GUIA_DESPLIEGUE_RENDER.md" style="color: #667eea;">GUIA_DESPLIEGUE_RENDER.md</a></p>
+        </div>
+    </div>
+</body>
+</html>
+
