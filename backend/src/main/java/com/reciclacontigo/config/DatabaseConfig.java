@@ -28,8 +28,11 @@ public class DatabaseConfig {
                 int port = dbUri.getPort();
                 String database = dbUri.getPath().substring(1); // Remove leading slash
                 
-                // Convert to JDBC URL format
-                String jdbcUrl = String.format("jdbc:postgresql://%s:%d/%s", host, port, database);
+                // Convert to JDBC URL format with SSL for Render
+                String jdbcUrl = String.format(
+                    "jdbc:postgresql://%s:%d/%s?sslmode=require&ssl=true", 
+                    host, port, database
+                );
                 
                 return DataSourceBuilder
                         .create()
